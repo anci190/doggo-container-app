@@ -1,0 +1,52 @@
+# Application Configuration
+namePrefix: devopswithzack
+
+namespace: default
+
+image:
+  repository: { Replace with your ECR repository URL}
+ # example,  repository: 11111111111.dkr.ecr.ap-southeast-2.amazonaws.com/doggo-ap
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 6
+
+# Service Configuration
+service:
+  type: NodePort
+  port: 80
+  targetPort: 80
+
+# PDB Configuration
+podDisruptionBudget:
+  minAvailable: "80%"
+
+# Container Resources
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "200m"
+    memory: "256Mi"
+
+# HPA Configuration
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 18
+  targetCPUUtilizationPercentage: 50
+
+# Ingress Configuration
+ingress:
+  className: eks-auto-alb
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+  path: /
+  pathType: Prefix
+
+# IngressClass Configuration
+ingressClass:
+  name: eks-auto-alb
+  controller: eks.amazonaws.com/alb
